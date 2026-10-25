@@ -40,6 +40,31 @@ Web forms always submit strings, so **both** `predict_server.py` and `app.py`
 explicitly cast these four columns back to `int` before building the DataFrame.
 If you write your own inference code, do the same.
 
+## Deliverables for the course
+
+```bash
+python tools/make_report.py   # one-page progress report  -> outputs/Second_Progress_Report.docx
+python tools/make_slides.py   # 14-slide deck             -> outputs/Second_Progress_Report.pptx
+```
+
+`PROGRESS_REPORT_2.md` is the plain-text source of the report if you prefer to
+paste it into a submission system.
+
+### Publishing to GitHub
+
+The local Git repository is already initialised with one commit and 25 tracked
+files (model binaries are excluded — see `.gitignore`). Create an empty
+repository on GitHub, then:
+
+```bash
+git remote add origin https://github.com/<your-account>/obesity-screening.git
+git branch -M main
+git push -u origin main
+```
+
+Replace `<team-account>` in `PROGRESS_REPORT_2.md` and on the title slide with
+your real repository URL once it exists.
+
 ## Design decisions
 
 - **Two feature sets.** `lifestyle` excludes Height/Weight/BMI;

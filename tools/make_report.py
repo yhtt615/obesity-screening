@@ -1,0 +1,162 @@
+"""
+生成一页的第二次项目进度报告（英文），同时输出 Markdown 与 Word 版本。
+运行: python tools/make_report.py
+产物: PROGRESS_REPORT_2.md, outputs/Second_Progress_Report.docx
+"""
+import re
+from pathlib import Path
+
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from docx.shared import Inches, Pt, RGBColor
+
+ROOT = Path(__file__).resolve().parent.parent
+OUT_DIR = ROOT / "outputs"
+
+TITLE = "Second Project Progress Report"
+SUBTITLE = ("Project: Lifestyle-Based Obesity Screening with Lightweight Machine Learning\n"
+            "Team: Wu Bingyan, Yang Haotong, Du Peilin    Date: 25 October 2026\n"
+            "Repository: https://github.com/<team-account>/obesity-screening  "
+            "(local repository initialised, commit 252bc2d, 25 tracked files; to be pushed)")
+
+SECTIONS = [
+    ("1. Data",
+     "We use obesity_level.csv (CSV = Comma-Separated Values, a plain-text table format), the Kaggle "
+     "“Obesity Risk” dataset distributed through Heywhale: 20,758 records × 18 columns, with no missing "
+     "values and no duplicate rows. Features comprise demographics (Gender; Age 14–61), body measurements "
+     "(Height 1.45–1.98 m; Weight 39–165 kg), family history of overweight, and eleven lifestyle variables: "
+     "FAVC (frequent consumption of high-caloric food), FCVC (frequency of vegetable consumption), NCP "
+     "(number of main meals per day), CAEC (consumption of food between meals), CH2O (daily water intake), "
+     "SCC (monitoring of calorie consumption), FAF (physical-activity frequency), TUE (time spent using "
+     "electronic devices), CALC (consumption of alcohol), SMOKE, and MTRANS (mode of transportation). "
+     "The target, NObeyesdad, has seven classes. We checked every column against the documented schema and "
+     "repaired three defects: the target column arrived as “0be1dad” (letter N replaced by the digit 0), "
+     "one class was written “0rmal_Weight” instead of “Normal_Weight”, and in CAEC and CALC the symbol “0” "
+     "denotes “no”. Mean Body Mass Index (BMI = weight in kilograms divided by height in metres squared) "
+     "rises monotonically across the seven classes, from 17.6 to 41.8, which confirms that the labels are "
+     "BMI-derived — the reason we run two feature-set experiments."),
+    ("2. Models",
+     "We implemented three classifiers with scikit-learn, each trained twice: on a lifestyle-only feature "
+     "set (height, weight and BMI excluded) and on a measurement-inclusive set. (i) A majority-class "
+     "baseline, which carries no information and exists only to define the floor a real model must beat. "
+     "(ii) Logistic Regression, a linear model tuned over regularisation strength C in {0.1, 1, 10} with "
+     "and without class weighting (6 configurations). (iii) A Random Forest — an ensemble of 400 decision "
+     "trees, each grown on a bootstrap resample of the training data and voting by majority — tuned over "
+     "tree depth, minimum samples per leaf and class weighting (8 configurations). Two feature sets × 15 "
+     "configurations = 30 fitted pipelines, completed in 24 seconds on a laptop CPU (Central Processing "
+     "Unit). The decision threshold was chosen on the validation set by scanning 91 candidate values from "
+     "0.05 to 0.95 and keeping the one that maximised the F1 score. Protocol: stratified 70 % / 15 % / 15 % "
+     "split (14,530 / 3,114 / 3,114 records, random seed 42); all preprocessing, including scaling and "
+     "One-Hot Encoding, sits inside a Pipeline fitted on training data only; the test set is read exactly "
+     "once, by a separate script, after every decision had been made."),
+    ("3. Progress",
+     "The full pipeline is complete and reproducible. On the held-out test set, the lifestyle-only Random "
+     "Forest reaches accuracy 0.897, precision 0.904, recall 0.884, F1 0.894, ROC-AUC (Receiver Operating "
+     "Characteristic – Area Under the Curve) 0.964 and PR-AUC (Precision-Recall Area Under the Curve) 0.967, "
+     "against 0.508 for the majority baseline; the measurement-inclusive version reaches F1 0.976 and "
+     "ROC-AUC 0.996. The seven-class extension attains 72.7 % accuracy with lifestyle features and 90.0 % "
+     "with measurements. Permutation importance shows that the measurement model depends almost entirely on "
+     "BMI (0.153) and weight (0.131), roughly thirty times more than its next feature, whereas the lifestyle "
+     "model relies on age, family history, snacking between meals, vegetable intake and high-calorie food; "
+     "we therefore present the lifestyle model as the interpretable result and the other purely as a "
+     "comparison. Deliverables already finished: cleaning, training and evaluation scripts; saved pipelines "
+     "with preprocessing embedded; three metric files; seven figures; the written report; and an interactive "
+     "questionnaire demo running at http://localhost:8501 that returns both models’ probabilities, the "
+     "seven-class distribution, and — for a real held-out record — whether the prediction matched the truth."),
+    ("4. Problems encountered",
+     "(a) A silent type-mismatch bug, the most dangerous one we hit: the four yes/no columns are integers in "
+     "the file, but a web form always submits text, so passing “1” as a string made the One-Hot Encoder treat "
+     "it as an unseen category and encode it as all zeros — no error and no warning. The same record scored "
+     "0.978 when passed as an integer and 0.486 when passed as text; we found this by deliberately testing "
+     "both types and fixed it with explicit conversion. (b) The corrupted labels described in section 1, "
+     "which would silently have produced a phantom eighth class. (c) Out-of-distribution inputs: our first "
+     "hand-made demo profile pushed every slider to an extreme and received only 0.25 obesity probability "
+     "despite a BMI of 38.5, because that combination of answers does not occur in the training data; the "
+     "demo presets now use two real records from the dataset. (d) Tooling: the Streamlit library would not "
+     "finish installing on our network, so we built the demo directly on the Python standard library’s HTTP "
+     "server, which needs no extra dependency and starts in about four seconds."),
+    ("5. Next steps",
+     "Push the repository to GitHub and share the link, adding Git LFS (Large File Storage) if the model "
+     "binaries are to be versioned as well. Conduct a fairness analysis: check whether accuracy, false-alarm "
+     "rate and miss rate differ between men and women and across age bands, since a screening tool should "
+     "behave equally well for every group. Add SHAP (SHapley Additive exPlanations) values so that we can "
+     "explain a single prediction rather than only global importance. Verify probability calibration, i.e. "
+     "whether a stated “70 % chance” truly corresponds to seven correct cases in ten. Repeat the split with "
+     "cross-validation and report the spread, so that a single favourable split cannot flatter our numbers. "
+     "Finally, prepare the written report and rehearse the five-minute presentation."),
+]
+
+
+def build_md():
+    lines = [f"# {TITLE}", ""]
+    for line in SUBTITLE.split("\n"):
+        lines.append(f"**{line}**" if line.startswith("Project:") else line)
+    lines.append("")
+    for head, body in SECTIONS:
+        lines.append(f"**{head}.** {body}")
+        lines.append("")
+    return "\n".join(lines)
+
+
+def build_docx(path):
+    doc = Document()
+    sec = doc.sections[0]
+    sec.top_margin = sec.bottom_margin = Inches(0.55)
+    sec.left_margin = sec.right_margin = Inches(0.65)
+
+    style = doc.styles["Normal"]
+    style.font.name = "Calibri"
+    style.font.size = Pt(9)
+    style.paragraph_format.space_after = Pt(3)
+    style.paragraph_format.line_spacing = 1.0
+
+    h = doc.add_paragraph()
+    r = h.add_run(TITLE)
+    r.bold = True
+    r.font.size = Pt(13)
+    r.font.color.rgb = RGBColor(0x2F, 0x6F, 0xB2)
+    h.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    h.paragraph_format.space_after = Pt(4)
+
+    meta = doc.add_paragraph()
+    meta.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    for i, line in enumerate(SUBTITLE.split("\n")):
+        rr = meta.add_run(("" if i == 0 else "\n") + line)
+        rr.font.size = Pt(8)
+        rr.italic = True
+        rr.font.color.rgb = RGBColor(0x5B, 0x6B, 0x82)
+    meta.paragraph_format.space_after = Pt(6)
+
+    def add_runs(p, text):
+        for part in re.split(r"(\*\*.+?\*\*)", text):
+            if not part:
+                continue
+            if part.startswith("**") and part.endswith("**"):
+                rr = p.add_run(part[2:-2])
+                rr.bold = True
+            else:
+                rr = p.add_run(part)
+            rr.font.size = Pt(9)
+
+    for head, body in SECTIONS:
+        p = doc.add_paragraph()
+        p.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
+        rr = p.add_run(f"{head}. ")
+        rr.bold = True
+        rr.font.size = Pt(9)
+        rr.font.color.rgb = RGBColor(0x2F, 0x6F, 0xB2)
+        add_runs(p, body)
+
+    doc.save(str(path))
+
+
+if __name__ == "__main__":
+    OUT_DIR.mkdir(parents=True, exist_ok=True)
+    md = ROOT / "PROGRESS_REPORT_2.md"
+    md.write_text(build_md(), encoding="utf-8")
+    print(f"已生成: {md}")
+    docx_path = OUT_DIR / "Second_Progress_Report.docx"
+    build_docx(docx_path)
+    print(f"已生成: {docx_path}")
+    print(f"报告正文约 {sum(len(b) for _, b in SECTIONS)} 字符 "
+          f"/ {sum(len(b.split()) for _, b in SECTIONS)} 词")
