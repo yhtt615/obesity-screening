@@ -1,0 +1,8 @@
+# Obesity Screening - Reproducible Pipeline
+# Python 3.13 · 全流程在普通笔记本 CPU 上 <1 分钟（不含 streamlit）
+numpy==2.5.1
+pandas==3.0.5
+scikit-learn==1.9.1
+matplotlib==3.11.1
+joblib==1.6.0
+streamlit>=1.49

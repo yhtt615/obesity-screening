@@ -1,0 +1,437 @@
+{
+  "seed": 42,
+  "n_train": 14530,
+  "n_val": 3114,
+  "runs": [
+    {
+      "feature_set": "lifestyle",
+      "model": "majority",
+      "params": {},
+      "fit_sec": 0.061,
+      "val_roc_auc": 0.5,
+      "val_pr_auc": 0.4913,
+      "threshold": 0.05,
+      "val_f1_at_threshold": 0.0
+    },
+    {
+      "feature_set": "lifestyle",
+      "model": "logreg",
+      "params": {
+        "C": 0.1,
+        "class_weight": null
+      },
+      "fit_sec": 0.048,
+      "val_roc_auc": 0.8877,
+      "val_pr_auc": 0.8554,
+      "threshold": 0.38,
+      "val_f1_at_threshold": 0.8142
+    },
+    {
+      "feature_set": "lifestyle",
+      "model": "logreg",
+      "params": {
+        "C": 0.1,
+        "class_weight": "balanced"
+      },
+      "fit_sec": 0.054,
+      "val_roc_auc": 0.8877,
+      "val_pr_auc": 0.8551,
+      "threshold": 0.39,
+      "val_f1_at_threshold": 0.8146
+    },
+    {
+      "feature_set": "lifestyle",
+      "model": "logreg",
+      "params": {
+        "C": 1.0,
+        "class_weight": null
+      },
+      "fit_sec": 0.076,
+      "val_roc_auc": 0.8881,
+      "val_pr_auc": 0.856,
+      "threshold": 0.39,
+      "val_f1_at_threshold": 0.8153
+    },
+    {
+      "feature_set": "lifestyle",
+      "model": "logreg",
+      "params": {
+        "C": 1.0,
+        "class_weight": "balanced"
+      },
+      "fit_sec": 0.075,
+      "val_roc_auc": 0.8882,
+      "val_pr_auc": 0.8559,
+      "threshold": 0.4,
+      "val_f1_at_threshold": 0.8159
+    },
+    {
+      "feature_set": "lifestyle",
+      "model": "logreg",
+      "params": {
+        "C": 10.0,
+        "class_weight": null
+      },
+      "fit_sec": 0.049,
+      "val_roc_auc": 0.8882,
+      "val_pr_auc": 0.8561,
+      "threshold": 0.39,
+      "val_f1_at_threshold": 0.8154
+    },
+    {
+      "feature_set": "lifestyle",
+      "model": "logreg",
+      "params": {
+        "C": 10.0,
+        "class_weight": "balanced"
+      },
+      "fit_sec": 0.047,
+      "val_roc_auc": 0.8882,
+      "val_pr_auc": 0.8559,
+      "threshold": 0.4,
+      "val_f1_at_threshold": 0.8157
+    },
+    {
+      "feature_set": "lifestyle",
+      "model": "rf",
+      "params": {
+        "n_estimators": 400,
+        "max_depth": null,
+        "min_samples_leaf": 1,
+        "class_weight": null
+      },
+      "fit_sec": 0.562,
+      "val_roc_auc": 0.9603,
+      "val_pr_auc": 0.9624,
+      "threshold": 0.47,
+      "val_f1_at_threshold": 0.8953
+    },
+    {
+      "feature_set": "lifestyle",
+      "model": "rf",
+      "params": {
+        "n_estimators": 400,
+        "max_depth": null,
+        "min_samples_leaf": 1,
+        "class_weight": "balanced"
+      },
+      "fit_sec": 0.684,
+      "val_roc_auc": 0.9609,
+      "val_pr_auc": 0.9634,
+      "threshold": 0.4,
+      "val_f1_at_threshold": 0.8936
+    },
+    {
+      "feature_set": "lifestyle",
+      "model": "rf",
+      "params": {
+        "n_estimators": 400,
+        "max_depth": null,
+        "min_samples_leaf": 3,
+        "class_weight": null
+      },
+      "fit_sec": 0.576,
+      "val_roc_auc": 0.9655,
+      "val_pr_auc": 0.968,
+      "threshold": 0.47,
+      "val_f1_at_threshold": 0.8995
+    },
+    {
+      "feature_set": "lifestyle",
+      "model": "rf",
+      "params": {
+        "n_estimators": 400,
+        "max_depth": null,
+        "min_samples_leaf": 3,
+        "class_weight": "balanced"
+      },
+      "fit_sec": 0.654,
+      "val_roc_auc": 0.9654,
+      "val_pr_auc": 0.9679,
+      "threshold": 0.52,
+      "val_f1_at_threshold": 0.8997
+    },
+    {
+      "feature_set": "lifestyle",
+      "model": "rf",
+      "params": {
+        "n_estimators": 400,
+        "max_depth": 16,
+        "min_samples_leaf": 1,
+        "class_weight": null
+      },
+      "fit_sec": 0.662,
+      "val_roc_auc": 0.9643,
+      "val_pr_auc": 0.9673,
+      "threshold": 0.52,
+      "val_f1_at_threshold": 0.8968
+    },
+    {
+      "feature_set": "lifestyle",
+      "model": "rf",
+      "params": {
+        "n_estimators": 400,
+        "max_depth": 16,
+        "min_samples_leaf": 1,
+        "class_weight": "balanced"
+      },
+      "fit_sec": 0.636,
+      "val_roc_auc": 0.9647,
+      "val_pr_auc": 0.9676,
+      "threshold": 0.5,
+      "val_f1_at_threshold": 0.8961
+    },
+    {
+      "feature_set": "lifestyle",
+      "model": "rf",
+      "params": {
+        "n_estimators": 400,
+        "max_depth": 16,
+        "min_samples_leaf": 3,
+        "class_weight": null
+      },
+      "fit_sec": 0.57,
+      "val_roc_auc": 0.965,
+      "val_pr_auc": 0.9675,
+      "threshold": 0.47,
+      "val_f1_at_threshold": 0.8993
+    },
+    {
+      "feature_set": "lifestyle",
+      "model": "rf",
+      "params": {
+        "n_estimators": 400,
+        "max_depth": 16,
+        "min_samples_leaf": 3,
+        "class_weight": "balanced"
+      },
+      "fit_sec": 0.641,
+      "val_roc_auc": 0.9652,
+      "val_pr_auc": 0.9676,
+      "threshold": 0.5,
+      "val_f1_at_threshold": 0.9002
+    },
+    {
+      "feature_set": "measurement",
+      "model": "majority",
+      "params": {},
+      "fit_sec": 0.015,
+      "val_roc_auc": 0.5,
+      "val_pr_auc": 0.4913,
+      "threshold": 0.05,
+      "val_f1_at_threshold": 0.0
+    },
+    {
+      "feature_set": "measurement",
+      "model": "logreg",
+      "params": {
+        "C": 0.1,
+        "class_weight": null
+      },
+      "fit_sec": 0.026,
+      "val_roc_auc": 0.993,
+      "val_pr_auc": 0.9936,
+      "threshold": 0.55,
+      "val_f1_at_threshold": 0.9653
+    },
+    {
+      "feature_set": "measurement",
+      "model": "logreg",
+      "params": {
+        "C": 0.1,
+        "class_weight": "balanced"
+      },
+      "fit_sec": 0.033,
+      "val_roc_auc": 0.993,
+      "val_pr_auc": 0.9937,
+      "threshold": 0.56,
+      "val_f1_at_threshold": 0.9657
+    },
+    {
+      "feature_set": "measurement",
+      "model": "logreg",
+      "params": {
+        "C": 1.0,
+        "class_weight": null
+      },
+      "fit_sec": 0.03,
+      "val_roc_auc": 0.993,
+      "val_pr_auc": 0.9937,
+      "threshold": 0.55,
+      "val_f1_at_threshold": 0.9663
+    },
+    {
+      "feature_set": "measurement",
+      "model": "logreg",
+      "params": {
+        "C": 1.0,
+        "class_weight": "balanced"
+      },
+      "fit_sec": 0.031,
+      "val_roc_auc": 0.993,
+      "val_pr_auc": 0.9937,
+      "threshold": 0.56,
+      "val_f1_at_threshold": 0.966
+    },
+    {
+      "feature_set": "measurement",
+      "model": "logreg",
+      "params": {
+        "C": 10.0,
+        "class_weight": null
+      },
+      "fit_sec": 0.028,
+      "val_roc_auc": 0.993,
+      "val_pr_auc": 0.9937,
+      "threshold": 0.55,
+      "val_f1_at_threshold": 0.9654
+    },
+    {
+      "feature_set": "measurement",
+      "model": "logreg",
+      "params": {
+        "C": 10.0,
+        "class_weight": "balanced"
+      },
+      "fit_sec": 0.029,
+      "val_roc_auc": 0.993,
+      "val_pr_auc": 0.9937,
+      "threshold": 0.56,
+      "val_f1_at_threshold": 0.9657
+    },
+    {
+      "feature_set": "measurement",
+      "model": "rf",
+      "params": {
+        "n_estimators": 400,
+        "max_depth": null,
+        "min_samples_leaf": 1,
+        "class_weight": null
+      },
+      "fit_sec": 0.576,
+      "val_roc_auc": 0.996,
+      "val_pr_auc": 0.9963,
+      "threshold": 0.54,
+      "val_f1_at_threshold": 0.9738
+    },
+    {
+      "feature_set": "measurement",
+      "model": "rf",
+      "params": {
+        "n_estimators": 400,
+        "max_depth": null,
+        "min_samples_leaf": 1,
+        "class_weight": "balanced"
+      },
+      "fit_sec": 0.665,
+      "val_roc_auc": 0.996,
+      "val_pr_auc": 0.9963,
+      "threshold": 0.56,
+      "val_f1_at_threshold": 0.9734
+    },
+    {
+      "feature_set": "measurement",
+      "model": "rf",
+      "params": {
+        "n_estimators": 400,
+        "max_depth": null,
+        "min_samples_leaf": 3,
+        "class_weight": null
+      },
+      "fit_sec": 0.61,
+      "val_roc_auc": 0.9959,
+      "val_pr_auc": 0.9962,
+      "threshold": 0.48,
+      "val_f1_at_threshold": 0.9719
+    },
+    {
+      "feature_set": "measurement",
+      "model": "rf",
+      "params": {
+        "n_estimators": 400,
+        "max_depth": null,
+        "min_samples_leaf": 3,
+        "class_weight": "balanced"
+      },
+      "fit_sec": 0.707,
+      "val_roc_auc": 0.996,
+      "val_pr_auc": 0.9962,
+      "threshold": 0.53,
+      "val_f1_at_threshold": 0.9712
+    },
+    {
+      "feature_set": "measurement",
+      "model": "rf",
+      "params": {
+        "n_estimators": 400,
+        "max_depth": 16,
+        "min_samples_leaf": 1,
+        "class_weight": null
+      },
+      "fit_sec": 0.599,
+      "val_roc_auc": 0.9961,
+      "val_pr_auc": 0.9964,
+      "threshold": 0.56,
+      "val_f1_at_threshold": 0.9731
+    },
+    {
+      "feature_set": "measurement",
+      "model": "rf",
+      "params": {
+        "n_estimators": 400,
+        "max_depth": 16,
+        "min_samples_leaf": 1,
+        "class_weight": "balanced"
+      },
+      "fit_sec": 0.672,
+      "val_roc_auc": 0.9961,
+      "val_pr_auc": 0.9964,
+      "threshold": 0.52,
+      "val_f1_at_threshold": 0.9735
+    },
+    {
+      "feature_set": "measurement",
+      "model": "rf",
+      "params": {
+        "n_estimators": 400,
+        "max_depth": 16,
+        "min_samples_leaf": 3,
+        "class_weight": null
+      },
+      "fit_sec": 0.578,
+      "val_roc_auc": 0.9959,
+      "val_pr_auc": 0.9961,
+      "threshold": 0.49,
+      "val_f1_at_threshold": 0.9716
+    },
+    {
+      "feature_set": "measurement",
+      "model": "rf",
+      "params": {
+        "n_estimators": 400,
+        "max_depth": 16,
+        "min_samples_leaf": 3,
+        "class_weight": "balanced"
+      },
+      "fit_sec": 0.694,
+      "val_roc_auc": 0.996,
+      "val_pr_auc": 0.9962,
+      "threshold": 0.54,
+      "val_f1_at_threshold": 0.9715
+    }
+  ],
+  "multiclass": [
+    {
+      "feature_set": "lifestyle",
+      "model": "rf",
+      "val_accuracy": 0.7177,
+      "fit_sec": 0.77
+    },
+    {
+      "feature_set": "measurement",
+      "model": "rf",
+      "val_accuracy": 0.8985,
+      "fit_sec": 0.93
+    }
+  ]
+}

@@ -1,0 +1,171 @@
+{
+  "n_rows_raw": 20758,
+  "n_cols_raw": 18,
+  "column_renamed": {
+    "0be1dad": "NObeyesdad"
+  },
+  "labels_before_fix": [
+    "0rmal_Weight",
+    "Insufficient_Weight",
+    "Obesity_Type_I",
+    "Obesity_Type_II",
+    "Obesity_Type_III",
+    "Overweight_Level_I",
+    "Overweight_Level_II"
+  ],
+  "labels_after_fix": [
+    "Insufficient_Weight",
+    "Normal_Weight",
+    "Obesity_Type_I",
+    "Obesity_Type_II",
+    "Obesity_Type_III",
+    "Overweight_Level_I",
+    "Overweight_Level_II"
+  ],
+  "missing_per_col": {
+    "id": 0,
+    "Gender": 0,
+    "Age": 0,
+    "Height": 0,
+    "Weight": 0,
+    "family_history_with_overweight": 0,
+    "FAVC": 0,
+    "FCVC": 0,
+    "NCP": 0,
+    "CAEC": 0,
+    "SMOKE": 0,
+    "CH2O": 0,
+    "SCC": 0,
+    "FAF": 0,
+    "TUE": 0,
+    "CALC": 0,
+    "MTRANS": 0,
+    "NObeyesdad": 0
+  },
+  "n_missing_total": 0,
+  "n_duplicate_rows_excl_id": 0,
+  "numeric_ranges": {
+    "Age": {
+      "min": 14.0,
+      "max": 61.0,
+      "mean": 23.8418,
+      "n_negative": 0
+    },
+    "Height": {
+      "min": 1.45,
+      "max": 1.975663,
+      "mean": 1.7002,
+      "n_negative": 0
+    },
+    "Weight": {
+      "min": 39.0,
+      "max": 165.057269,
+      "mean": 87.8878,
+      "n_negative": 0
+    },
+    "FCVC": {
+      "min": 1.0,
+      "max": 3.0,
+      "mean": 2.4459,
+      "n_negative": 0
+    },
+    "NCP": {
+      "min": 1.0,
+      "max": 4.0,
+      "mean": 2.7613,
+      "n_negative": 0
+    },
+    "CH2O": {
+      "min": 1.0,
+      "max": 3.0,
+      "mean": 2.0294,
+      "n_negative": 0
+    },
+    "FAF": {
+      "min": 0.0,
+      "max": 3.0,
+      "mean": 0.9817,
+      "n_negative": 0
+    },
+    "TUE": {
+      "min": 0.0,
+      "max": 2.0,
+      "mean": 0.6168,
+      "n_negative": 0
+    }
+  },
+  "categorical_levels": {
+    "Gender": [
+      "Female",
+      "Male"
+    ],
+    "family_history_with_overweight": [
+      "0",
+      "1"
+    ],
+    "FAVC": [
+      "0",
+      "1"
+    ],
+    "CAEC": [
+      "Always",
+      "Frequently",
+      "Sometimes",
+      "no"
+    ],
+    "SMOKE": [
+      "0",
+      "1"
+    ],
+    "SCC": [
+      "0",
+      "1"
+    ],
+    "CALC": [
+      "Frequently",
+      "Sometimes",
+      "no"
+    ],
+    "MTRANS": [
+      "Automobile",
+      "Bike",
+      "Motorbike",
+      "Public_Transportation",
+      "Walking"
+    ]
+  },
+  "multiclass_distribution": {
+    "Obesity_Type_III": 4046,
+    "Obesity_Type_II": 3248,
+    "Normal_Weight": 3082,
+    "Obesity_Type_I": 2910,
+    "Insufficient_Weight": 2523,
+    "Overweight_Level_II": 2522,
+    "Overweight_Level_I": 2427
+  },
+  "binary_distribution": {
+    "obesity(1)": 10204,
+    "non_obesity(0)": 10554
+  },
+  "obesity_rate": 0.4916,
+  "bmi_by_class": {
+    "Insufficient_Weight": 17.58,
+    "Normal_Weight": 22.0,
+    "Obesity_Type_I": 32.15,
+    "Obesity_Type_II": 36.52,
+    "Obesity_Type_III": 41.78,
+    "Overweight_Level_I": 26.06,
+    "Overweight_Level_II": 28.19
+  },
+  "split_sizes": {
+    "train": 14530,
+    "val": 3114,
+    "test": 3114
+  },
+  "split_obesity_rate": {
+    "train": 0.4916,
+    "val": 0.4913,
+    "test": 0.4917
+  },
+  "runtime_sec": 0.44
+}

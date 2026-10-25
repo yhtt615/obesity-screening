@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>肥胖筛查模型 · 实验报告</title>
+<style>
+  :root { --ink:#1a2332; --muted:#5b6b82; --line:#e3e9f2; --blue:#2f6fb2; --bg:#f7f9fc; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:"Microsoft YaHei","PingFang SC",sans-serif; color:var(--ink); background:var(--bg); line-height:1.7; }
+  .wrap { max-width:960px; margin:0 auto; padding:40px 24px 80px; }
+  h1 { font-size:26px; margin:0 0 4px; }
+  .sub { color:var(--muted); font-size:14px; margin-bottom:28px; }
+  h2 { font-size:19px; margin:36px 0 12px; border-left:4px solid var(--blue); padding-left:10px; }
+  .card { background:#fff; border:1px solid var(--line); border-radius:10px; padding:20px 24px; margin:14px 0; }
+  table { border-collapse:collapse; width:100%; font-size:14px; background:#fff; }
+  th,td { border:1px solid var(--line); padding:8px 12px; text-align:center; }
+  th { background:#eef3fa; font-weight:600; }
+  td:first-child, th:first-child { text-align:left; }
+  .best { background:#e8f3ea; font-weight:600; }
+  .kpis { display:flex; gap:14px; flex-wrap:wrap; margin:18px 0; }
+  .kpi { flex:1; min-width:170px; background:#fff; border:1px solid var(--line); border-radius:10px; padding:14px 18px; }
+  .kpi .v { font-size:26px; font-weight:700; color:var(--blue); }
+  .kpi .l { font-size:13px; color:var(--muted); }
+  img { max-width:100%; border:1px solid var(--line); border-radius:8px; margin:8px 0; }
+  .note { background:#fff8e8; border:1px solid #f0dfae; border-radius:8px; padding:12px 16px; font-size:14px; }
+  code { background:#eef1f5; padding:2px 6px; border-radius:4px; font-size:13px; }
+  ul { margin:8px 0; }
+  .two { display:flex; gap:16px; flex-wrap:wrap; }
+  .two > div { flex:1; min-width:340px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>Lifestyle-Based Obesity Screening · 实验报告</h1>
+<div class="sub">课程项目 · 吴炳言 / 杨皓童 / 杜沛霖 · 2026-10-25 · 数据：Kaggle Obesity Risk（Heywhale 分发）</div>
+
+<div class="note"><b>任务定位（答辩第一句话）：</b>这是一个基于生活方式特征的<b>当前肥胖状态筛查工具</b>，
+不是医疗诊断，也不是未来肥胖风险预测 —— 标签来自 BMI 分段，这一点在两套特征对比中得到了直接验证。</div>
+
+<h2>一、数据核查结论</h2>
+<div class="card">
+<ul>
+  <li><b>20,758 行 × 18 列</b>，零缺失、零重复（按 id 外全部特征判重），数值范围无异常（Age 14–61，Height 1.45–1.98m，Weight 39–165kg）。</li>
+  <li><b>发现并修复三处数据问题：</b>目标列名 <code>0be1dad</code> → <code>NObeyesdad</code>；标签 <code>0rmal_Weight</code> → <code>Normal_Weight</code>；CAEC/CALC 中的 <code>0</code> 恢复为 "no"。</li>
+  <li>二分类标签几乎完美平衡：肥胖 10,204（49.2%）vs 非肥胖 10,554（50.8%）。</li>
+  <li><b>关键证据：</b>各类 BMI 均值严格单调 —— 偏瘦 17.6 → 正常 22.0 → 超重I 26.1 → 超重II 28.2 → 肥胖I 32.2 → 肥胖II 36.5 → 肥胖III 41.8。
+  标签本质上由 BMI 定义，因此「不含身高体重」的模型对比不是可选项，而是<b>防止误导性结论的必要实验</b>。</li>
+  <li>划分：按 7 类分层 70/15/15（seed=42），三份的肥胖率分别为 49.16% / 49.13% / 49.17%。</li>
+</ul>
+</div>
+
+<h2>二、测试集最终结果（仅评估一次）</h2>
+<div class="kpis">
+  <div class="kpi"><div class="v">0.964</div><div class="l">生活方式模型 ROC-AUC（Random Forest）</div></div>
+  <div class="kpi"><div class="v">0.894</div><div class="l">生活方式模型 F1（肥胖类）</div></div>
+  <div class="kpi"><div class="v">0.996</div><div class="l">含测量值模型 ROC-AUC（Random Forest）</div></div>
+  <div class="kpi"><div class="v">24 s</div><div class="l">全流程训练耗时（笔记本 CPU）</div></div>
+</div>
+<table>
+  <tr><th>特征集</th><th>模型</th><th>Accuracy</th><th>Precision</th><th>Recall</th><th>F1</th><th>ROC-AUC</th><th>PR-AUC</th></tr>
+  <tr><td>仅生活方式</td><td>多数类基线</td><td>0.508</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.500</td><td>0.492</td></tr>
+  <tr><td>仅生活方式</td><td>Logistic Regression</td><td>0.802</td><td>0.730</td><td>0.946</td><td>0.824</td><td>0.902</td><td>0.880</td></tr>
+  <tr class="best"><td>仅生活方式</td><td>Random Forest</td><td>0.897</td><td>0.904</td><td>0.884</td><td>0.894</td><td>0.964</td><td>0.967</td></tr>
+  <tr><td>含测量值</td><td>Logistic Regression</td><td>0.968</td><td>0.969</td><td>0.965</td><td>0.967</td><td>0.994</td><td>0.995</td></tr>
+  <tr class="best"><td>含测量值</td><td>Random Forest</td><td>0.977</td><td>0.982</td><td>0.971</td><td>0.976</td><td>0.996</td><td>0.997</td></tr>
+</table>
+<p style="font-size:13px;color:var(--muted)">Precision / Recall / F1 均针对肥胖类（Obesity I–III），阈值在验证集上按 F1 最优选取（lifestyle=0.50，measurement=0.54）。</p>
+
+<h2>三、扩展：七类细分（Random Forest）</h2>
+<div class="card">仅生活方式 <b>0.727</b> · 含测量值 <b>0.900</b>（测试集 accuracy）。答辩可表述为：纯生活方式特征能把人分到正确的肥胖等级的比例约为 73%，作为筛查参考已相当可观。</div>
+
+<h2>四、特征重要性（排列重要性，测试集）</h2>
+<div class="two">
+  <div class="card">
+    <b>仅生活方式模型</b>
+    <img src="outputs/figures/perm_lifestyle.png" alt="lifestyle importance">
+    前五：Age、家族超重史、两餐间加餐（CAEC）、蔬菜摄入频率（FCVC）、高热量食物（FAVC）。吸烟与热量监测的贡献约为 0。
+  </div>
+  <div class="card">
+    <b>含测量值模型</b>
+    <img src="outputs/figures/perm_measurement.png" alt="measurement importance">
+    <b>BMI（0.153）+ 体重（0.131）碾压其余所有特征</b> —— 第三名家族史只有 0.005，相差约 30 倍。
+  </div>
+</div>
+<div class="note"><b>答辩金句：</b>含测量值模型本质上只是在「读 BMI」，生活方式信息几乎没有被使用；
+所以真正值得解释的模型是左边的那个 —— 它证明不量身高体重、只靠问卷，也能做到 AUC 0.96 的筛查能力。
+（所有重要性均为<b>预测关联，不是因果</b>。）</div>
+
+<h2>五、混淆矩阵与曲线</h2>
+<div class="two">
+  <div class="card"><b>仅生活方式 / RF</b><img src="outputs/figures/cm_lifestyle_rf.png" alt="cm1"></div>
+  <div class="card"><b>含测量值 / RF</b><img src="outputs/figures/cm_measurement_rf.png" alt="cm2"></div>
+</div>
+<div class="card"><b>ROC / PR 曲线（测试集）</b><img src="outputs/figures/roc_pr_curves.png" alt="curves"></div>
+
+<h2>六、可复现步骤</h2>
+<div class="card">
+<pre style="margin:0;font-size:13px;line-height:1.9">python -m venv .venv && .venv\Scripts\activate
+pip install -r requirements.txt
+python src/prepare_data.py    # 清洗 + 标签修复 + 分层拆分（不读测试集之外的信息）
+python src/train.py           # 训练集拟合、验证集调参选阈值（物理上不读测试集）
+python src/evaluate.py        # 测试集只在这一步被读取一次，产出全部指标和图
+streamlit run app.py          # 问卷式演示（虚构示例，非诊断）</pre>
+</div>
+
+<h2>七、局限（答辩必备）</h2>
+<div class="card">
+<ul>
+  <li>标签是 BMI 分段的产物（数据含合成增强成分），「肥胖」在这里是 BMI 类别而非临床评估。</li>
+  <li>「当前状态分类」≠「未来风险预测」，不能外推为纵向预测。</li>
+  <li>尚未做性别/年龄分组的公平性分析（可作为后续工作）。</li>
+</ul>
+</div>
+
+</div>
+</body>
+</html>

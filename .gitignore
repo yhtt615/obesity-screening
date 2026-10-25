@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Trained models are large (~100 MB in total) and are excluded from version
+# control. They are fully reproducible in <30 s on a laptop CPU by running:
+#   python src/prepare_data.py && python src/train.py
+# If you need the binaries in the repo, install Git LFS and run:
+#   git lfs install && git lfs track "*.joblib" && git add .gitattributes
+outputs/models/*.joblib
+
+# OS
+.DS_Store
+Thumbs.db

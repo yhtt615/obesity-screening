@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>肥胖筛查模型 · 交互预测</title>
+<style>
+  :root{
+    --ink:#1a2332; --muted:#5b6b82; --line:#e3e9f2; --bg:#f7f9fc;
+    --blue:#2f6fb2; --blue-l:#e6f1fb; --warn:#faece7; --warn-b:#f0c4b3;
+    --ob:#d85a30; --nob:#1d9e75;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"Microsoft YaHei","PingFang SC",system-ui,sans-serif;
+       color:var(--ink);background:var(--bg);line-height:1.6}
+  header{background:#fff;border-bottom:1px solid var(--line);padding:16px 24px}
+  header h1{margin:0;font-size:19px;font-weight:600}
+  header p{margin:2px 0 0;font-size:12.5px;color:var(--muted)}
+  .disclaimer{background:var(--warn);border-bottom:1px solid var(--warn-b);
+              padding:9px 24px;font-size:12.5px;color:#7a3a20}
+  .wrap{display:flex;gap:18px;padding:18px 24px 40px;align-items:flex-start;flex-wrap:wrap}
+  .panel-form{flex:1 1 460px;min-width:340px}
+  .panel-result{flex:1 1 400px;min-width:340px;position:sticky;top:14px}
+  .card{background:#fff;border:1px solid var(--line);border-radius:12px;
+        padding:16px 18px;margin-bottom:14px}
+  .card h2{margin:0 0 12px;font-size:14px;font-weight:600;color:var(--blue);
+           border-bottom:1px solid var(--line);padding-bottom:8px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px 16px}
+  .field label{display:block;font-size:12.5px;color:var(--muted);margin-bottom:4px}
+  .field .val{float:right;color:var(--blue);font-weight:600;font-size:12.5px}
+  select,input[type=range],input[type=number]{width:100%;font:inherit;font-size:13px}
+  select{padding:6px 8px;border:1px solid var(--line);border-radius:7px;background:#fff;color:var(--ink)}
+  input[type=number]{padding:6px 8px;border:1px solid var(--line);border-radius:7px}
+  input[type=range]{accent-color:var(--blue);height:18px}
+  .btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+  button{padding:9px 15px;border-radius:8px;border:1px solid var(--line);
+         background:#fff;color:var(--ink);font:inherit;font-size:13px;cursor:pointer}
+  button:hover{border-color:var(--blue);color:var(--blue)}
+  button.primary{background:var(--blue);border-color:var(--blue);color:#fff;font-weight:600}
+  button.primary:hover{background:#25608f;color:#fff}
+  .result-card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:14px}
+  .result-card h3{margin:0 0 4px;font-size:14px;font-weight:600}
+  .result-card .sub{font-size:11.5px;color:var(--muted);margin:0 0 12px}
+  .verdict{display:flex;align-items:baseline;gap:10px}
+  .big{font-size:34px;font-weight:700;letter-spacing:-1px}
+  .ob{color:var(--ob)} .nob{color:var(--nob)}
+  .tag{font-size:12px;padding:3px 9px;border-radius:20px;border:1px solid var(--line)}
+  .tag.ob{background:#faece7;color:#993c1d;border-color:var(--warn-b)}
+  .tag.nob{background:#e1f5ee;color:#0f6e56;border-color:#9fe1cb}
+  .bar{height:9px;background:#eef1f5;border-radius:6px;overflow:hidden;margin:12px 0 4px}
+  .bar > div{height:100%;border-radius:6px;transition:width .5s ease}
+  .thr{font-size:11.5px;color:var(--muted);text-align:right}
+  .levels{margin-top:14px}
+  .lv{display:flex;align-items:center;gap:8px;margin-bottom:5px;font-size:12px}
+  .lv .nm{width:104px;flex:none;color:var(--muted)}
+  .lv .track{flex:1;height:13px;background:#eef1f5;border-radius:4px;overflow:hidden}
+  .lv .fill{height:100%;border-radius:4px;transition:width .5s ease}
+  .lv .pc{width:42px;text-align:right;color:var(--ink);font-variant-numeric:tabular-nums}
+  .truth{margin-top:10px;font-size:12px;padding:7px 10px;border-radius:7px;background:var(--blue-l);color:#185fa5}
+  .empty{color:var(--muted);font-size:13px;text-align:center;padding:34px 0}
+  .foot{font-size:12px;color:var(--muted);padding:0 24px 30px}
+  .ok{color:var(--nob);font-weight:600} .bad{color:var(--ob);font-weight:600}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Lifestyle-Based Obesity Screening · 交互预测</h1>
+  <p>课程项目 · 吴炳言 / 杨皓童 / 杜沛霖 · Random Forest（400 棵树，测试集 AUC 0.964 / 0.996）</p>
+</header>
+
+<div class="disclaimer">
+  仅用于课程演示。模型基于公开数据集的「当前状态」标签训练，<b>不是未来风险预测，也不能作为任何医疗判断依据</b>。
+  输入可为虚构示例。
+</div>
+
+<div class="wrap">
+  <div class="panel-form">
+    <div class="card">
+      <h2>基本信息</h2>
+      <div class="grid">
+        <div class="field"><label>Gender 性别</label>
+          <select name="Gender"><option>Male</option><option>Female</option></select></div>
+        <div class="field"><label>Age 年龄 <span class="val" id="v-Age">24</span></label>
+          <input type="range" name="Age" min="14" max="61" step="1" value="24"></div>
+        <div class="field"><label>家族超重史 family_history</label>
+          <select name="family_history_with_overweight">
+            <option value="1">是 Yes</option><option value="0">否 No</option></select></div>
+        <div class="field"><label>常吃高热量食物 FAVC</label>
+          <select name="FAVC"><option value="1">是 Yes</option><option value="0">否 No</option></select></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>饮食习惯</h2>
+      <div class="grid">
+        <div class="field"><label>蔬菜摄入频率 FCVC <span class="val" id="v-FCVC">2.5</span></label>
+          <input type="range" name="FCVC" min="1" max="3" step="0.1" value="2.5"></div>
+        <div class="field"><label>每日主餐次数 NCP <span class="val" id="v-NCP">3.0</span></label>
+          <input type="range" name="NCP" min="1" max="4" step="0.1" value="3.0"></div>
+        <div class="field"><label>两餐间加餐 CAEC</label>
+          <select name="CAEC"><option value="no">不吃 no</option><option>Sometimes</option>
+            <option>Frequently</option><option>Always</option></select></div>
+        <div class="field"><label>每日饮水 CH2O <span class="val" id="v-CH2O">2.0</span></label>
+          <input type="range" name="CH2O" min="1" max="3" step="0.1" value="2.0"></div>
+        <div class="field"><label>饮酒频率 CALC</label>
+          <select name="CALC"><option value="no">不喝 no</option><option>Sometimes</option>
+            <option>Frequently</option></select></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>生活习惯</h2>
+      <div class="grid">
+        <div class="field"><label>运动频率 FAF <span class="val" id="v-FAF">1.0</span></label>
+          <input type="range" name="FAF" min="0" max="3" step="0.1" value="1.0"></div>
+        <div class="field"><label>每日屏幕时长 TUE <span class="val" id="v-TUE">0.6</span></label>
+          <input type="range" name="TUE" min="0" max="2" step="0.1" value="0.6"></div>
+        <div class="field"><label>吸烟 SMOKE</label>
+          <select name="SMOKE"><option value="0">否 No</option><option value="1">是 Yes</option></select></div>
+        <div class="field"><label>监测热量摄入 SCC</label>
+          <select name="SCC"><option value="0">否 No</option><option value="1">是 Yes</option></select></div>
+        <div class="field"><label>主要通勤方式 MTRANS</label>
+          <select name="MTRANS"><option value="Public_Transportation">公共交通</option>
+            <option value="Walking">步行</option><option value="Automobile">开车</option>
+            <option value="Motorbike">摩托</option><option value="Bike">自行车</option></select></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>身体测量值（仅含测量值模型使用）</h2>
+      <div class="grid">
+        <div class="field"><label>Height 身高 (m)</label>
+          <input type="number" name="Height" min="1.45" max="2.10" step="0.01" value="1.70"></div>
+        <div class="field"><label>Weight 体重 (kg)</label>
+          <input type="number" name="Weight" min="39" max="170" step="0.5" value="70.0"></div>
+      </div>
+      <div class="btns">
+        <button class="primary" onclick="run()">预测</button>
+        <button onclick="preset('normal')">示例：正常体重</button>
+        <button onclick="preset('obese')">示例：肥胖 III 型</button>
+        <button onclick="randomSample()">随机样本</button>
+        <button onclick="randomSample('Obesity_Type_III')">随机肥胖样本</button>
+        <button onclick="randomSample('Normal_Weight')">随机正常样本</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel-result">
+    <div class="result-card">
+      <h3>A · 仅生活方式模型</h3>
+      <p class="sub">不含身高 / 体重 / BMI，测试集 ROC-AUC = 0.964</p>
+      <div id="r-lifestyle"><div class="empty">填写左侧问卷后点击「预测」</div></div>
+    </div>
+    <div class="result-card">
+      <h3>B · 含测量值模型</h3>
+      <p class="sub">额外加入身高 / 体重 / BMI，测试集 ROC-AUC = 0.996</p>
+      <div id="r-measurement"><div class="empty">同上</div></div>
+    </div>
+    <div id="r-truth"></div>
+  </div>
+</div>
+
+<div class="foot">
+  提示：含测量值模型指标更高，但排列重要性显示它几乎只依赖 BMI 与体重（第三名特征弱 30 倍）——
+  真正值得解释的是左侧那个不量身高体重的模型。所有输出均为「预测关联」，不代表因果。
+</div>
+
+<script>
+const ZH = {
+  "Insufficient_Weight":["偏瘦","#85b7eb"], "Normal_Weight":["正常","#97c459"],
+  "Overweight_Level_I":["超重 I 级","#ef9f27"], "Overweight_Level_II":["超重 II 级","#f0997b"],
+  "Obesity_Type_I":["肥胖 I 型","#d85a30"], "Obesity_Type_II":["肥胖 II 型","#e24b4a"],
+  "Obesity_Type_III":["肥胖 III 型","#a32d2d"]
+};
+
+document.querySelectorAll('input[type=range]').forEach(el=>{
+  const out = document.getElementById('v-'+el.name);
+  el.addEventListener('input', ()=>{ if(out) out.textContent = (+el.value).toFixed(el.step.includes('.')?1:0); });
+});
+
+function collect(){
+  const d = {};
+  document.querySelectorAll('[name]').forEach(el=>{
+    d[el.name] = (el.tagName==='INPUT') ? parseFloat(el.value) : el.value;
+  });
+  return d;
+}
+
+function fill(v){
+  for(const k in v){
+    const el = document.querySelector('[name="'+k+'"]');
+    if(!el) continue;
+    el.value = v[k];
+    const out = document.getElementById('v-'+k);
+    if(out) out.textContent = (typeof v[k]==='number')
+      ? (el.step && el.step.includes('.') ? v[k].toFixed(1) : v[k].toFixed(0)) : v[k];
+  }
+}
+
+function renderCard(id, r){
+  const cls = r.is_obese ? 'ob' : 'nob';
+  const label = r.is_obese ? '肥胖类 (Obesity I–III)' : '非肥胖类';
+  let lv = '';
+  for(const p of r.multiclass){
+    const [zh,color] = ZH[p.cls] || [p.cls,'#888780'];
+    lv += '<div class="lv"><div class="nm">'+zh+'</div><div class="track">'+
+          '<div class="fill" style="width:'+(p.prob*100).toFixed(1)+'%;background:'+color+'"></div></div>'+
+          '<div class="pc">'+(p.prob*100).toFixed(1)+'%</div></div>';
+  }
+  document.getElementById(id).innerHTML =
+    '<div class="verdict"><span class="big '+cls+'">'+(r.obesity_prob*100).toFixed(1)+'%</span>'+
+    '<span class="tag '+cls+'">'+label+'</span></div>'+
+    '<div class="bar"><div class="'+cls+'" style="width:'+(r.obesity_prob*100).toFixed(1)+
+    '%;background:'+(r.is_obese?'var(--ob)':'var(--nob)')+'"></div></div>'+
+    '<div class="thr">判定阈值 '+r.threshold.toFixed(2)+'</div>'+
+    '<div class="levels" style="margin-top:14px"><div style="font-size:12px;color:var(--muted);margin-bottom:6px">'+
+    '七类细分概率 · 最高：<b>'+(ZH[r.level]?ZH[r.level][0]:r.level)+'</b></div>'+lv+'</div>';
+}
+
+function run(truth){
+  fetch('/api/predict', {method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify(collect())})
+    .then(r=>r.json())
+    .then(d=>{
+      renderCard('r-lifestyle', d.lifestyle);
+      renderCard('r-measurement', d.measurement);
+      const t = document.getElementById('r-truth');
+      if(truth){
+        const [zh] = ZH[truth] || [truth];
+        const ob = truth.startsWith('Obesity');
+        t.innerHTML = '<div class="result-card"><div class="truth">该样本的<b>真实标签</b>（仅用于演示对照，不参与训练）'+
+          '：<b>'+zh+'</b> · BMI '+d.bmi+' · 模型预测为 <b>'+
+          (ZH[d.lifestyle.level]?ZH[d.lifestyle.level][0]:'')+'</b> '+
+          (d.lifestyle.level===truth?'<span class="ok">✓ 猜对</span>':'<span class="bad">✗ 猜错</span>')+
+          '</div></div>';
+      } else {
+        t.innerHTML = '<div class="result-card"><div class="truth">当前输入 BMI = '+d.bmi+'</div></div>';
+      }
+    })
+    .catch(e=>alert('请求失败：'+e));
+}
+
+const PRESETS = {
+  normal:{Gender:'Male', Age:20, Height:1.80, Weight:65.0,
+    family_history_with_overweight:'0', FAVC:'1', FCVC:2.0, NCP:1.0, CAEC:'Sometimes',
+    CH2O:2.0, CALC:'no', FAF:2.0, TUE:1.0, SMOKE:'0', SCC:'0',
+    MTRANS:'Public_Transportation'},
+  obese:{Gender:'Female', Age:26, Height:1.62, Weight:105.4,
+    family_history_with_overweight:'1', FAVC:'1', FCVC:3.0, NCP:3.0, CAEC:'Sometimes',
+    CH2O:1.0, CALC:'Sometimes', FAF:0.0, TUE:0.4, SMOKE:'0', SCC:'0',
+    MTRANS:'Public_Transportation'}
+};
+
+function preset(type){ fill(PRESETS[type]); run(); }
+
+function randomSample(target){
+  const url = target ? '/api/sample?target='+target : '/api/sample';
+  fetch(url).then(r=>r.json()).then(d=>{ fill(d.input); run(d.truth); });
+}
+
+run();
+</script>
+</body>
+</html>
