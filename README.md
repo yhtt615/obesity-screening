@@ -62,7 +62,7 @@ git branch -M main
 git push -u origin main
 ```
 
-Replace `<team-account>` in `PROGRESS_REPORT_2.md` and on the title slide with
+Replace `yhtt615` in `PROGRESS_REPORT_2.md` and on the title slide with
 your real repository URL once it exists.
 
 ## Design decisions

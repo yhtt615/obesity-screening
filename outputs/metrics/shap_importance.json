@@ -1,0 +1,37 @@
+{
+  "lifestyle": {
+    "family_history_with_overweight": 0.10143,
+    "Age": 0.09204,
+    "CH2O": 0.0691,
+    "CAEC": 0.05902,
+    "FCVC": 0.04055,
+    "TUE": 0.03285,
+    "FAF": 0.03084,
+    "FAVC": 0.02481,
+    "MTRANS": 0.0204,
+    "CALC": 0.01959,
+    "Gender": 0.01674,
+    "NCP": 0.01598,
+    "SCC": 0.00532,
+    "SMOKE": 0.00053
+  },
+  "measurement": {
+    "BMI": 0.22647,
+    "Weight": 0.1661,
+    "family_history_with_overweight": 0.03942,
+    "Age": 0.0273,
+    "CH2O": 0.01897,
+    "CAEC": 0.0166,
+    "Gender": 0.01257,
+    "FAVC": 0.00894,
+    "Height": 0.00817,
+    "TUE": 0.00659,
+    "CALC": 0.006,
+    "FAF": 0.00554,
+    "NCP": 0.00506,
+    "FCVC": 0.00486,
+    "MTRANS": 0.00385,
+    "SCC": 0.00116,
+    "SMOKE": 0.0001
+  }
+}

@@ -161,9 +161,9 @@ for txt, sz, col in [("Second Project Progress Report", Pt(17), RGBColor(0xCF, 0
 
 bullets(s, [
     ("Team: ", "Wu Bingyan  ·  Yang Haotong  ·  Du Peilin"),
-    ("Date: ", "25 October 2026"),
+    ("Date: ", "26 October 2026"),
     ("Dataset: ", "Kaggle “Obesity Risk” dataset, distributed via Heywhale — 20,758 records"),
-    ("Code repository: ", "local Git repository initialised and committed; ready to push to GitHub"),
+    ("Completed work: ", "data cleaning, model training and evaluation, saved results, and a working demo"),
     ("Live demo: ", "http://localhost:8501  (interactive questionnaire, Python standard library only)"),
 ], 0.85, 3.55, 11.6, 2.4, size=14, gap=12)
 text(s, "All abbreviations are spelled out on every slide.", 0.85, 6.45, 11.6, 0.4,
@@ -307,7 +307,8 @@ bullets(s, [
                                       "C (the penalty for large weights) ∈ {0.1, 1, 10}, with and without class weighting."),
     ("3. Random Forest (RF) — our main model: ", "an ensemble of 400 decision trees. Each tree is grown on a "
                                                  "bootstrap resample (sampling 14,530 records with replacement, so each tree sees a slightly "
-                                                 "different dataset) and at every split it may only consider √p ≈ 5 randomly offered features. "
+                                                 "different dataset) and at every split it may only consider √p ≈ 5 randomly offered features, "
+                                                 "where p is the number of input features after encoding. "
                                                  "The 400 trees then vote, and the fraction voting “obesity” is the predicted probability. "
                                                  "We tried 8 configurations (tree depth, minimum samples per leaf, class weighting)."),
     ("Total: ", "2 feature sets × 15 configurations = 30 fitted pipelines, 24 seconds in total on an ordinary "
@@ -374,19 +375,40 @@ text(s, "Key finding: BMI (0.153) and weight (0.131) dominate the measurement mo
 footer(s, 10)
 
 # ============================== 11. Evidence ==============================
-s = slide("10. Evidence of completed work", "Everything below is finished and reproducible from the repository")
+s = slide("10. Current progress and evidence of completed work",
+          "Code, saved results and a working prediction demo — all finished")
 bullets(s, [
-    ("1. Reproducible pipeline (three scripts, run in order): ", "prepare_data.py (clean, repair labels, "
-                                                                 "split) → train.py (fit on training data, tune on validation only) → evaluate.py "
-                                                                 "(read the test set once, produce every number and figure in this deck)."),
-    ("2. Saved artefacts: ", "trained pipelines with their preprocessing embedded, three metric files in "
-                             "JSON (JavaScript Object Notation) format, and seven figures (curves, confusion matrices, importance plots)."),
-    ("3. Interactive demo: ", "a questionnaire web page at http://localhost:8501. It shows both models "
-                              "side by side, displays the seven-class probability bars, and can draw a real held-out "
-                              "record to show whether the prediction matches the true label."),
-    ("4. Version control: ", "a local Git repository is initialised with 25 tracked files and one commit; "
-                             "large model binaries are excluded and can be rebuilt in under 30 seconds."),
-], 0.6, 1.45, 12.2, 3.9, size=13, gap=13)
+    ("1. Data preparation is complete: ", "src/prepare_data.py checks data quality, repairs the three "
+                                          "label defects, creates the binary target, derives BMI, and saves the three stratified data splits."),
+    ("2. Training and evaluation are complete: ", "src/train.py fitted 30 candidate pipelines in 24 seconds "
+                                                 "and selected settings on validation data; src/evaluate.py then produced every test result "
+                                                 "and figure shown in this presentation."),
+    ("3. The evidence is saved: ", "three machine-readable result files in JSON (JavaScript Object Notation) "
+                                   "format, seven figures, and trained pipelines with preprocessing embedded, so predictions use exactly "
+                                   "the same transformations as training."),
+    ("4. The interactive demo works: ", "the questionnaire returns both models’ probabilities and seven-class "
+                                        "bars; it can also load a real held-out record and compare the prediction with its known label."),
+], 0.6, 1.4, 12.2, 3.75, size=12.5, gap=10)
+box = s.shapes.add_shape(1, Inches(0.6), Inches(5.35), Inches(12.15), Inches(1.35))
+box.fill.solid()
+box.fill.fore_color.rgb = LIGHT
+box.line.color.rgb = BLUE
+box.shadow.inherit = False
+tb = box.text_frame
+tb.word_wrap = True
+tb.margin_left = Inches(0.2)
+tb.margin_top = Inches(0.08)
+for i, cmd in enumerate([
+        "Run the completed pipeline:",
+        "python src/prepare_data.py     python src/train.py     python src/evaluate.py",
+        "Start the interactive prediction demo:  python -X utf8 predict_server.py"]):
+    p = tb.paragraphs[0] if i == 0 else tb.add_paragraph()
+    p.text = cmd
+    p.font.size = Pt(11.5 if i else 12)
+    p.font.bold = (i == 0)
+    p.font.color.rgb = BLUE if i == 0 else DARK
+    p.font.name = FONT
+    p.space_after = Pt(5)
 footer(s, 11)
 
 # ============================== 12. Problems ==============================
@@ -403,15 +425,16 @@ bullets(s, [
                                      "and received only 25 % obesity probability despite a BMI of 38.5, because that combination does not "
                                      "exist in the training data. We now use two real records from the dataset as demo presets."),
     ("Tooling: ", "the Streamlit demo library would not finish installing on our network, so we built the "
-                  "demo directly on the Python standard library’s HTTP server — zero extra dependencies, and it starts in about four seconds."),
+                  "demo directly on the Python standard library’s HTTP (HyperText Transfer Protocol) server — "
+                  "zero extra dependencies, and it starts in about four seconds."),
 ], 0.6, 1.45, 12.2, 4.9, size=12.5, gap=13)
 footer(s, 12)
 
 # ============================== 13. Next steps ==============================
 s = slide("12. Next steps", "What we will do between now and the final submission")
 bullets(s, [
-    ("Push the repository to GitHub ", "and share the link; add Git LFS (Large File Storage) if we decide "
-                                       "to version the model binaries as well."),
+    ("Reproducibility check: ", "rerun the complete pipeline in a clean Python environment, record the "
+                                "package versions, and confirm that the saved results can be regenerated exactly."),
     ("Fairness and subgroup analysis: ", "check whether accuracy, false-alarm rate and miss rate differ "
                                          "between men and women and across age bands — a screening tool should behave equally well for everyone."),
     ("Per-prediction explanations with SHAP ", "(SHapley Additive exPlanations): show which features pushed "

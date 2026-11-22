@@ -1,0 +1,175 @@
+{
+  "cross_validation": [
+    {
+      "feature_set": "lifestyle",
+      "model": "LR",
+      "cv_f1_mean": 0.8139,
+      "cv_f1_std": 0.0033,
+      "cv_auc_mean": 0.8906,
+      "cv_auc_std": 0.0043,
+      "cv_acc_mean": 0.801,
+      "cv_acc_std": 0.0024
+    },
+    {
+      "feature_set": "lifestyle",
+      "model": "RF",
+      "cv_f1_mean": 0.8928,
+      "cv_f1_std": 0.004,
+      "cv_auc_mean": 0.9627,
+      "cv_auc_std": 0.0014,
+      "cv_acc_mean": 0.8954,
+      "cv_acc_std": 0.0036
+    },
+    {
+      "feature_set": "measurement",
+      "model": "LR",
+      "cv_f1_mean": 0.9641,
+      "cv_f1_std": 0.0016,
+      "cv_auc_mean": 0.9937,
+      "cv_auc_std": 0.0009,
+      "cv_acc_mean": 0.9646,
+      "cv_acc_std": 0.0016
+    },
+    {
+      "feature_set": "measurement",
+      "model": "RF",
+      "cv_f1_mean": 0.9711,
+      "cv_f1_std": 0.002,
+      "cv_auc_mean": 0.996,
+      "cv_auc_std": 0.0008,
+      "cv_acc_mean": 0.9717,
+      "cv_acc_std": 0.0019
+    }
+  ],
+  "fairness": [
+    {
+      "feature_set": "lifestyle",
+      "group_type": "Gender",
+      "group": "Female",
+      "n": 1573,
+      "obesity_rate": 0.509,
+      "accuracy": 0.9231,
+      "f1": 0.9236,
+      "false_alarm_rate": 0.0673,
+      "miss_rate": 0.0862
+    },
+    {
+      "feature_set": "lifestyle",
+      "group_type": "Gender",
+      "group": "Male",
+      "n": 1541,
+      "obesity_rate": 0.474,
+      "accuracy": 0.8696,
+      "f1": 0.8609,
+      "false_alarm_rate": 0.1136,
+      "miss_rate": 0.1491
+    },
+    {
+      "feature_set": "lifestyle",
+      "group_type": "age_group",
+      "group": "14-21",
+      "n": 1185,
+      "obesity_rate": 0.198,
+      "accuracy": 0.9038,
+      "f1": 0.7164,
+      "false_alarm_rate": 0.0242,
+      "miss_rate": 0.3872
+    },
+    {
+      "feature_set": "lifestyle",
+      "group_type": "age_group",
+      "group": "22-30",
+      "n": 1494,
+      "obesity_rate": 0.693,
+      "accuracy": 0.911,
+      "f1": 0.9365,
+      "false_alarm_rate": 0.1703,
+      "miss_rate": 0.0531
+    },
+    {
+      "feature_set": "lifestyle",
+      "group_type": "age_group",
+      "group": "31-61",
+      "n": 435,
+      "obesity_rate": 0.598,
+      "accuracy": 0.8276,
+      "f1": 0.8588,
+      "false_alarm_rate": 0.2457,
+      "miss_rate": 0.1231
+    },
+    {
+      "feature_set": "measurement",
+      "group_type": "Gender",
+      "group": "Female",
+      "n": 1573,
+      "obesity_rate": 0.509,
+      "accuracy": 0.9765,
+      "f1": 0.9767,
+      "false_alarm_rate": 0.0155,
+      "miss_rate": 0.0312
+    },
+    {
+      "feature_set": "measurement",
+      "group_type": "Gender",
+      "group": "Male",
+      "n": 1541,
+      "obesity_rate": 0.474,
+      "accuracy": 0.9766,
+      "f1": 0.9753,
+      "false_alarm_rate": 0.0198,
+      "miss_rate": 0.0274
+    },
+    {
+      "feature_set": "measurement",
+      "group_type": "age_group",
+      "group": "14-21",
+      "n": 1185,
+      "obesity_rate": 0.198,
+      "accuracy": 0.9806,
+      "f1": 0.9503,
+      "false_alarm_rate": 0.0084,
+      "miss_rate": 0.0638
+    },
+    {
+      "feature_set": "measurement",
+      "group_type": "age_group",
+      "group": "22-30",
+      "n": 1494,
+      "obesity_rate": 0.693,
+      "accuracy": 0.9819,
+      "f1": 0.9869,
+      "false_alarm_rate": 0.0197,
+      "miss_rate": 0.0174
+    },
+    {
+      "feature_set": "measurement",
+      "group_type": "age_group",
+      "group": "31-61",
+      "n": 435,
+      "obesity_rate": 0.598,
+      "accuracy": 0.9471,
+      "f1": 0.9557,
+      "false_alarm_rate": 0.0629,
+      "miss_rate": 0.0462
+    }
+  ],
+  "calibration": [
+    {
+      "feature_set": "lifestyle",
+      "brier_before": 0.0768,
+      "brier_isotonic": 0.0753,
+      "brier_platt": 0.0744,
+      "chosen_calibrator": "isotonic",
+      "brier_after": 0.0753
+    },
+    {
+      "feature_set": "measurement",
+      "brier_before": 0.0189,
+      "brier_isotonic": 0.0188,
+      "brier_platt": 0.0187,
+      "chosen_calibrator": "isotonic",
+      "brier_after": 0.0188
+    }
+  ],
+  "runtime_sec": 9.7
+}
