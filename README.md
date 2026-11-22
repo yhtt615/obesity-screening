@@ -62,8 +62,8 @@ git branch -M main
 git push -u origin main
 ```
 
-Replace `yhtt615` in `PROGRESS_REPORT_2.md` and on the title slide with
-your real repository URL once it exists.
+The repository URL used in the reports and slides is
+`https://github.com/yhtt615/obesity-screening`.
 
 ## Design decisions
 
